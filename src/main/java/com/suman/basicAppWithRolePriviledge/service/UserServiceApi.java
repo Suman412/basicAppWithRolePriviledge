@@ -9,10 +9,11 @@ import com.suman.basicAppWithRolePriviledge.payload.UserModel;
 @Component
 public interface UserServiceApi {
 
-	CustomResponseEntity<?> signUpAsAdmin(UserModel userModel);
+	CustomResponseEntity<?> signUpAsEmployee(UserModel userModel);
 
-	CustomResponseEntity<?> signUpAsUser(UserModel userModel);
+	CustomResponseEntity<?> signUpAsCustomer(UserModel userModel);
+
+	CustomResponseEntity<?> signUpAsPublic(UserModel userModel);
 
 	CustomResponseEntity<?> signIn(LoginUser loginUser);
-
 }

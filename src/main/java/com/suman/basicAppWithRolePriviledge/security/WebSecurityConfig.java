@@ -8,7 +8,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -20,13 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(
-        securedEnabled = true,
-        jsr250Enabled = true,
-        prePostEnabled = true
-)
-@Order(2)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@Order(1)
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     CustomUserDetailsService customUserDetailsService;
@@ -71,10 +65,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-				.antMatchers("/")
+				.antMatchers(HttpMethod.POST, "/signUpAsEmployee", "/signUpAsCustomer", "/signUpAsPublic", "/signIn")
                 .permitAll()
-				.antMatchers(HttpMethod.POST, "/signUpAsAdmin", "/signUpAsUser", "/signIn")
-                .permitAll()
+                .antMatchers(
+                        "/favicon.ico",
+                        "/**/*.png",
+                        "/**/*.gif",
+                        "/**/*.svg",
+                        "/**/*.jpg",
+                        "/**/*.html",
+                        "/**/*.css",
+                        "/**/*.js",
+                        "/v2/api-docs",
+                        "/configuration/ui",
+                        "/swagger-resources/**",
+                        "/configuration/security",
+                        "/swagger-ui.html"
+				).permitAll()
                 .anyRequest()
                 .authenticated();
 

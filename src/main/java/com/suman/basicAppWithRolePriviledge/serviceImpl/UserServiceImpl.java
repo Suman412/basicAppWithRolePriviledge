@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserServiceApi {
 	private int jwtExpirationInMs;
 
 	@Override
-	public CustomResponseEntity<?> signUpAsAdmin(UserModel userModel) {
+	public CustomResponseEntity<?> signUpAsEmployee(UserModel userModel) {
 		List<String> roles = Arrays.asList("EMPLOYEE_USER");
 		if (Boolean.TRUE.equals(userRepository.existsByEmail(userModel.getEmail()))) {
 			return new CustomResponseEntity<>(LocalDateTime.now(), HttpStatus.BAD_REQUEST,
@@ -79,9 +79,33 @@ public class UserServiceImpl implements UserServiceApi {
 				new SignUpResponse<>("User registered successfully!", save,
 						new JwtAuthenticationResponse(jwt, refreshToken)));
 	}
+	@Override
+	public CustomResponseEntity<?> signUpAsCustomer(UserModel userModel) {
+		List<String> roles = Arrays.asList("CUSTOMER_USER");
+		if (Boolean.TRUE.equals(userRepository.existsByEmail(userModel.getEmail()))) {
+			return new CustomResponseEntity<>(LocalDateTime.now(), HttpStatus.BAD_REQUEST,
+					new SignUpResponse<>("Email Address already in use!", null, null));
+		}
+		User user = new User();
+		user.setFullName(userModel.getFullName());
+		user.setEmail(userModel.getEmail().toLowerCase());
+		user.setPassword(passwordEncoder.encode(userModel.getPassword()));
+		Set<String> roleNames = new HashSet<>(roles);
+		Set<Role> userRole = roleRepository.findByNames(roleNames);
+		user.setRoles(userRole);
+		user.setIsActive(true);
+		User save = userRepository.save(user);
+		Authentication authentication = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(userModel.getEmail().toLowerCase(), userModel.getPassword()));
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		String jwt = tokenProvider.generateToken(authentication);
+		String refreshToken = tokenProvider.generateRefreshToken(authentication);
+		return new CustomResponseEntity<>(LocalDateTime.now(), HttpStatus.OK, new SignUpResponse<>(
+				"User registered successfully!", save, new JwtAuthenticationResponse(jwt, refreshToken)));
+	}
 
 	@Override
-	public CustomResponseEntity<?> signUpAsUser(UserModel userModel) {
+	public CustomResponseEntity<?> signUpAsPublic(UserModel userModel) {
 		List<String> roles = Arrays.asList("PUBLIC_USER");
 		if (userRepository.existsByEmail(userModel.getEmail())) {
 			return new CustomResponseEntity<>(LocalDateTime.now(), HttpStatus.BAD_REQUEST,

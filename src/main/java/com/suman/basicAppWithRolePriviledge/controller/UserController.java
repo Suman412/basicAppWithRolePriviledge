@@ -14,14 +14,20 @@ import com.suman.basicAppWithRolePriviledge.service.UserServiceApi;
 public class UserController {
 	@Autowired
 	private UserServiceApi userServiceApi;
-	@PostMapping("/signUpAsAdmin")
-	public CustomResponseEntity<?> signUpAsAdmin(@RequestBody UserModel userModel) {
-		return userServiceApi.signUpAsAdmin(userModel);
+
+	@PostMapping("/signUpAsEmployee")
+	public CustomResponseEntity<?> signUpAsEmployee(@RequestBody UserModel userModel) {
+		return userServiceApi.signUpAsEmployee(userModel);
 	}
 
-	@PostMapping("/signUpAsUser")
-	public CustomResponseEntity<?> signUpAsUser(@RequestBody UserModel userModel) {
-		return userServiceApi.signUpAsUser(userModel);
+	@PostMapping("/signUpAsCustomer")
+	public CustomResponseEntity<?> signUpAsCustomer(@RequestBody UserModel userModel) {
+		return userServiceApi.signUpAsCustomer(userModel);
+	}
+
+	@PostMapping("/signUpAsPublic")
+	public CustomResponseEntity<?> signUpAsPublic(@RequestBody UserModel userModel) {
+		return userServiceApi.signUpAsPublic(userModel);
 	}
 
 	@PostMapping("/signIn")
