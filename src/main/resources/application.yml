@@ -4,9 +4,6 @@ app:
   jwtSecret: JWTSuperSecretKey
 server:
   port: 8080
-logging:
-  level:
-    root: INFO
 spring:
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/userroletest
@@ -14,16 +11,6 @@ spring:
     password: root
     validationQuery: SELECT 1
     testWhileIdle: true
-    hikari:
-      connection-timeout: 3000
-      maximum-pool-size: 5
-      minimum-idle: 2
-      pool-name: HikariConnectionPool
-    maxLifeTime: 600000
-  jackson:
-    serialization:
-      WRITE_DATES_AS_TIMESTAMPS: false
-    time-zone: UTC
   jpa:
     show-sql: true
     hibernate:
