@@ -9,6 +9,11 @@ spring:
     url: ${JAWSDB_URL:jdbc:mysql://127.0.0.1:3306/userroletest}
     username: root
     password: root
+    hikari:
+      connection-timeout: 30000
+      maximum-pool-size: 50
+      minimum-idle: 20
+      pool-name: HikariConnectionPool
     tomcat:      validation-query: SELECT 1      test-while-idle: true
   jpa:
     show-sql: true
